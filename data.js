@@ -41,13 +41,13 @@ window.PLAYBILL = {
   seniors: [
     {
       name: "Emma Sweet",
-      photos: [window.__resources.seniorEmma1, window.__resources.seniorEmma2],
+      photos: ["assets/senior-emma-1.png", "assets/senior-emma-2.png"],
       quote: "Dance is the hidden language of the soul.",
       quoteBy: "Martha Graham",
     },
     {
       name: "Mikah Levenduski",
-      photos: [window.__resources.seniorMikah1, window.__resources.seniorMikah2],
+      photos: ["assets/senior-mikah-1.png", "assets/senior-mikah-2.png"],
       quote: "To dance is to be out of yourself. Larger, more beautiful, more powerful.",
       quoteBy: "Agnes de Mille",
     },
@@ -141,14 +141,14 @@ window.PLAYBILL = {
   ],
 
   ads: [
-    { src: window.__resources.ad1, alt: "Class of 2026 — Emma Sweet" },
-    { src: window.__resources.ad2, alt: "Class of 2026 — Mikah Levenduski" },
-    { src: window.__resources.ad3, alt: "Congratulations Lilly & Willow" },
-    { src: window.__resources.ad4, alt: "Avery Elizabeth" },
-    { src: window.__resources.ad5, alt: "Addy, Alyssa & Sophie" },
-    { src: window.__resources.ad6, alt: "Emma Jordan" },
-    { src: window.__resources.ad7, alt: "S.K. Painting LLC" },
-    { src: window.__resources.ad8, alt: "Stella & Wdov-Co Crane" },
-    { src: window.__resources.ad9, alt: "Carly R" },
+    { src: "assets/ad-1.png", alt: "Class of 2026 — Emma Sweet" },
+    { src: "assets/ad-2.png", alt: "Class of 2026 — Mikah Levenduski" },
+    { src: "assets/ad-3.png", alt: "Congratulations Lilly & Willow" },
+    { src: "assets/ad-4.png", alt: "Avery Elizabeth" },
+    { src: "assets/ad-5.png", alt: "Addy, Alyssa & Sophie" },
+    { src: "assets/ad-6.png", alt: "Emma Jordan" },
+    { src: "assets/ad-7.png", alt: "S.K. Painting LLC" },
+    { src: "assets/ad-8.png", alt: "Stella & Wdov-Co Crane" },
+    { src: "assets/ad-9.png", alt: "Carly R" },
   ],
 };

@@ -73,7 +73,7 @@ function Cover({ onEnter }) {
   return (
     <section className="cover" data-screen-label="01 Cover">
       <div className="cover-image-wrap">
-        <img src={window.__resources.cover} alt="Velocity 2026" className="cover-image" />
+        <img src="assets/cover-glow.png" alt="Velocity 2026" className="cover-image" />
       </div>
       <button className="cover-cta" onClick={onEnter}>
         <span>Open Playbill</span>
