@@ -1061,9 +1061,8 @@ img { max-width: 100%; display: block; }
 <body>
 <div id="root"></div>
 
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
 
 <script>
 // Playbill data — Velocity 2026
@@ -1222,901 +1221,1396 @@ window.PLAYBILL = {
 };
 </script>
 
-<script type="text/babel">
+<script>
+"use strict";
 
+function _toArray(r) { return _arrayWithHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableRest(); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 // tweaks-panel.jsx
 // Reusable Tweaks shell + form-control helpers.
 
-const __TWEAKS_STYLE = `
-  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
-    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
-    transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom right;
-    background:rgba(250,249,247,.78);color:#29261b;
-    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
-    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
-    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
-    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
-  .twk-hd{display:flex;align-items:center;justify-content:space-between;
-    padding:10px 8px 10px 14px;cursor:move;user-select:none}
-  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
-  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
-    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
-  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
-  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
-    overflow-y:auto;overflow-x:hidden;min-height:0;
-    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
-  .twk-body::-webkit-scrollbar{width:8px}
-  .twk-body::-webkit-scrollbar-track{background:transparent;margin:2px}
-  .twk-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:4px;
-    border:2px solid transparent;background-clip:content-box}
-  .twk-body::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.25);
-    border:2px solid transparent;background-clip:content-box}
-  .twk-row{display:flex;flex-direction:column;gap:5px}
-  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
-  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;
-    color:rgba(41,38,27,.72)}
-  .twk-lbl>span:first-child{font-weight:500}
-  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
-
-  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-    color:rgba(41,38,27,.45);padding:10px 0 0}
-  .twk-sect:first-child{padding-top:0}
-
-  .twk-field{appearance:none;box-sizing:border-box;width:100%;min-width:0;height:26px;padding:0 8px;
-    border:.5px solid rgba(0,0,0,.1);border-radius:7px;
-    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
-  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}
-  select.twk-field{padding-right:22px;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>");
-    background-repeat:no-repeat;background-position:right 8px center}
-
-  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;
-    border-radius:999px;background:rgba(0,0,0,.12);outline:none}
-  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
-    width:14px;height:14px;border-radius:50%;background:#fff;
-    border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
-  .twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
-    background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
-
-  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
-    background:rgba(0,0,0,.06);user-select:none}
-  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
-    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
-    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
-  .twk-seg.dragging .twk-seg-thumb{transition:none}
-  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
-    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
-    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;
-    overflow-wrap:anywhere}
-
-  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
-    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
-  .twk-toggle[data-on="1"]{background:#34c759}
-  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
-    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
-  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
-
-  .twk-num{display:flex;align-items:center;box-sizing:border-box;min-width:0;height:26px;padding:0 0 0 8px;
-    border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6)}
-  .twk-num-lbl{font-weight:500;color:rgba(41,38,27,.6);cursor:ew-resize;
-    user-select:none;padding-right:8px}
-  .twk-num input{flex:1;min-width:0;height:100%;border:0;background:transparent;
-    font:inherit;font-variant-numeric:tabular-nums;text-align:right;padding:0 8px 0 0;
-    outline:none;color:inherit;-moz-appearance:textfield}
-  .twk-num input::-webkit-inner-spin-button,.twk-num input::-webkit-outer-spin-button{
-    -webkit-appearance:none;margin:0}
-  .twk-num-unit{padding-right:8px;color:rgba(41,38,27,.45)}
-
-  .twk-btn{appearance:none;height:26px;padding:0 12px;border:0;border-radius:7px;
-    background:rgba(0,0,0,.78);color:#fff;font:inherit;font-weight:500;cursor:default}
-  .twk-btn:hover{background:rgba(0,0,0,.88)}
-  .twk-btn.secondary{background:rgba(0,0,0,.06);color:inherit}
-  .twk-btn.secondary:hover{background:rgba(0,0,0,.1)}
-
-  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:22px;
-    border:.5px solid rgba(0,0,0,.1);border-radius:6px;padding:0;cursor:default;
-    background:transparent;flex-shrink:0}
-  .twk-swatch::-webkit-color-swatch-wrapper{padding:0}
-  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5.5px}
-  .twk-swatch::-moz-color-swatch{border:0;border-radius:5.5px}
-
-  .twk-chips{display:flex;gap:6px}
-  .twk-chip{position:relative;appearance:none;flex:1;min-width:0;height:46px;
-    padding:0;border:0;border-radius:6px;overflow:hidden;cursor:default;
-    box-shadow:0 0 0 .5px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.06);
-    transition:transform .12s cubic-bezier(.3,.7,.4,1),box-shadow .12s}
-  .twk-chip:hover{transform:translateY(-1px);
-    box-shadow:0 0 0 .5px rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.12)}
-  .twk-chip[data-on="1"]{box-shadow:0 0 0 1.5px rgba(0,0,0,.85),
-    0 2px 6px rgba(0,0,0,.15)}
-  .twk-chip>span{position:absolute;top:0;bottom:0;right:0;width:34%;
-    display:flex;flex-direction:column;box-shadow:-1px 0 0 rgba(0,0,0,.1)}
-  .twk-chip>span>i{flex:1;box-shadow:0 -1px 0 rgba(0,0,0,.1)}
-  .twk-chip>span>i:first-child{box-shadow:none}
-  .twk-chip svg{position:absolute;top:6px;left:6px;width:13px;height:13px;
-    filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
-`;
+var __TWEAKS_STYLE = "\n  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;\n    max-height:calc(100vh - 32px);display:flex;flex-direction:column;\n    transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom right;\n    background:rgba(250,249,247,.78);color:#29261b;\n    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);\n    border:.5px solid rgba(255,255,255,.6);border-radius:14px;\n    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);\n    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}\n  .twk-hd{display:flex;align-items:center;justify-content:space-between;\n    padding:10px 8px 10px 14px;cursor:move;user-select:none}\n  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}\n  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);\n    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}\n  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}\n  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;\n    overflow-y:auto;overflow-x:hidden;min-height:0;\n    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}\n  .twk-body::-webkit-scrollbar{width:8px}\n  .twk-body::-webkit-scrollbar-track{background:transparent;margin:2px}\n  .twk-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:4px;\n    border:2px solid transparent;background-clip:content-box}\n  .twk-body::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.25);\n    border:2px solid transparent;background-clip:content-box}\n  .twk-row{display:flex;flex-direction:column;gap:5px}\n  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}\n  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;\n    color:rgba(41,38,27,.72)}\n  .twk-lbl>span:first-child{font-weight:500}\n  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}\n\n  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;\n    color:rgba(41,38,27,.45);padding:10px 0 0}\n  .twk-sect:first-child{padding-top:0}\n\n  .twk-field{appearance:none;box-sizing:border-box;width:100%;min-width:0;height:26px;padding:0 8px;\n    border:.5px solid rgba(0,0,0,.1);border-radius:7px;\n    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}\n  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}\n  select.twk-field{padding-right:22px;\n    background-image:url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>\");\n    background-repeat:no-repeat;background-position:right 8px center}\n\n  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;\n    border-radius:999px;background:rgba(0,0,0,.12);outline:none}\n  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;\n    width:14px;height:14px;border-radius:50%;background:#fff;\n    border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}\n  .twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;\n    background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}\n\n  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;\n    background:rgba(0,0,0,.06);user-select:none}\n  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;\n    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);\n    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}\n  .twk-seg.dragging .twk-seg-thumb{transition:none}\n  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;\n    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;\n    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;\n    overflow-wrap:anywhere}\n\n  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;\n    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}\n  .twk-toggle[data-on=\"1\"]{background:#34c759}\n  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;\n    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}\n  .twk-toggle[data-on=\"1\"] i{transform:translateX(14px)}\n\n  .twk-num{display:flex;align-items:center;box-sizing:border-box;min-width:0;height:26px;padding:0 0 0 8px;\n    border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6)}\n  .twk-num-lbl{font-weight:500;color:rgba(41,38,27,.6);cursor:ew-resize;\n    user-select:none;padding-right:8px}\n  .twk-num input{flex:1;min-width:0;height:100%;border:0;background:transparent;\n    font:inherit;font-variant-numeric:tabular-nums;text-align:right;padding:0 8px 0 0;\n    outline:none;color:inherit;-moz-appearance:textfield}\n  .twk-num input::-webkit-inner-spin-button,.twk-num input::-webkit-outer-spin-button{\n    -webkit-appearance:none;margin:0}\n  .twk-num-unit{padding-right:8px;color:rgba(41,38,27,.45)}\n\n  .twk-btn{appearance:none;height:26px;padding:0 12px;border:0;border-radius:7px;\n    background:rgba(0,0,0,.78);color:#fff;font:inherit;font-weight:500;cursor:default}\n  .twk-btn:hover{background:rgba(0,0,0,.88)}\n  .twk-btn.secondary{background:rgba(0,0,0,.06);color:inherit}\n  .twk-btn.secondary:hover{background:rgba(0,0,0,.1)}\n\n  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:22px;\n    border:.5px solid rgba(0,0,0,.1);border-radius:6px;padding:0;cursor:default;\n    background:transparent;flex-shrink:0}\n  .twk-swatch::-webkit-color-swatch-wrapper{padding:0}\n  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5.5px}\n  .twk-swatch::-moz-color-swatch{border:0;border-radius:5.5px}\n\n  .twk-chips{display:flex;gap:6px}\n  .twk-chip{position:relative;appearance:none;flex:1;min-width:0;height:46px;\n    padding:0;border:0;border-radius:6px;overflow:hidden;cursor:default;\n    box-shadow:0 0 0 .5px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.06);\n    transition:transform .12s cubic-bezier(.3,.7,.4,1),box-shadow .12s}\n  .twk-chip:hover{transform:translateY(-1px);\n    box-shadow:0 0 0 .5px rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.12)}\n  .twk-chip[data-on=\"1\"]{box-shadow:0 0 0 1.5px rgba(0,0,0,.85),\n    0 2px 6px rgba(0,0,0,.15)}\n  .twk-chip>span{position:absolute;top:0;bottom:0;right:0;width:34%;\n    display:flex;flex-direction:column;box-shadow:-1px 0 0 rgba(0,0,0,.1)}\n  .twk-chip>span>i{flex:1;box-shadow:0 -1px 0 rgba(0,0,0,.1)}\n  .twk-chip>span>i:first-child{box-shadow:none}\n  .twk-chip svg{position:absolute;top:6px;left:6px;width:13px;height:13px;\n    filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}\n";
 
 // ── useTweaks ───────────────────────────────────────────────────────────────
 function useTweaks(defaults) {
-  const [values, setValues] = React.useState(defaults);
-  const setTweak = React.useCallback((keyOrEdits, val) => {
-    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
-      ? keyOrEdits : { [keyOrEdits]: val };
-    setValues((prev) => ({ ...prev, ...edits }));
-    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
-    window.dispatchEvent(new CustomEvent('tweakchange', { detail: edits }));
+  var _React$useState = React.useState(defaults),
+    _React$useState2 = _slicedToArray(_React$useState, 2),
+    values = _React$useState2[0],
+    setValues = _React$useState2[1];
+  var setTweak = React.useCallback(function (keyOrEdits, val) {
+    var edits = _typeof(keyOrEdits) === 'object' && keyOrEdits !== null ? keyOrEdits : _defineProperty({}, keyOrEdits, val);
+    setValues(function (prev) {
+      return _objectSpread(_objectSpread({}, prev), edits);
+    });
+    window.parent.postMessage({
+      type: '__edit_mode_set_keys',
+      edits: edits
+    }, '*');
+    window.dispatchEvent(new CustomEvent('tweakchange', {
+      detail: edits
+    }));
   }, []);
   return [values, setTweak];
 }
 
 // ── TweaksPanel ─────────────────────────────────────────────────────────────
-function TweaksPanel({ title = 'Tweaks', noDeckControls = false, children }) {
-  const [open, setOpen] = React.useState(false);
-  const dragRef = React.useRef(null);
-  const hasDeckStage = React.useMemo(
-    () => typeof document !== 'undefined' && !!document.querySelector('deck-stage'),
-    [],
-  );
-  const [railEnabled, setRailEnabled] = React.useState(
-    () => hasDeckStage && !!document.querySelector('deck-stage')?._railEnabled,
-  );
-  React.useEffect(() => {
+function TweaksPanel(_ref2) {
+  var _ref2$title = _ref2.title,
+    title = _ref2$title === void 0 ? 'Tweaks' : _ref2$title,
+    _ref2$noDeckControls = _ref2.noDeckControls,
+    noDeckControls = _ref2$noDeckControls === void 0 ? false : _ref2$noDeckControls,
+    children = _ref2.children;
+  var _React$useState3 = React.useState(false),
+    _React$useState4 = _slicedToArray(_React$useState3, 2),
+    open = _React$useState4[0],
+    setOpen = _React$useState4[1];
+  var dragRef = React.useRef(null);
+  var hasDeckStage = React.useMemo(function () {
+    return typeof document !== 'undefined' && !!document.querySelector('deck-stage');
+  }, []);
+  var _React$useState5 = React.useState(function () {
+      var _document$querySelect;
+      return hasDeckStage && !!((_document$querySelect = document.querySelector('deck-stage')) !== null && _document$querySelect !== void 0 && _document$querySelect._railEnabled);
+    }),
+    _React$useState6 = _slicedToArray(_React$useState5, 2),
+    railEnabled = _React$useState6[0],
+    setRailEnabled = _React$useState6[1];
+  React.useEffect(function () {
     if (!hasDeckStage || railEnabled) return undefined;
-    const onMsg = (e) => {
+    var onMsg = function onMsg(e) {
       if (e.data && e.data.type === '__omelette_rail_enabled') setRailEnabled(true);
     };
     window.addEventListener('message', onMsg);
-    return () => window.removeEventListener('message', onMsg);
+    return function () {
+      return window.removeEventListener('message', onMsg);
+    };
   }, [hasDeckStage, railEnabled]);
-  const [railVisible, setRailVisible] = React.useState(() => {
-    try { return localStorage.getItem('deck-stage.railVisible') !== '0'; } catch (e) { return true; }
-  });
-  const toggleRail = (on) => {
+  var _React$useState7 = React.useState(function () {
+      try {
+        return localStorage.getItem('deck-stage.railVisible') !== '0';
+      } catch (e) {
+        return true;
+      }
+    }),
+    _React$useState8 = _slicedToArray(_React$useState7, 2),
+    railVisible = _React$useState8[0],
+    setRailVisible = _React$useState8[1];
+  var toggleRail = function toggleRail(on) {
     setRailVisible(on);
-    window.postMessage({ type: '__deck_rail_visible', on }, '*');
+    window.postMessage({
+      type: '__deck_rail_visible',
+      on: on
+    }, '*');
   };
-  const offsetRef = React.useRef({ x: 16, y: 16 });
-  const PAD = 16;
-
-  const clampToViewport = React.useCallback(() => {
-    const panel = dragRef.current;
+  var offsetRef = React.useRef({
+    x: 16,
+    y: 16
+  });
+  var PAD = 16;
+  var clampToViewport = React.useCallback(function () {
+    var panel = dragRef.current;
     if (!panel) return;
-    const w = panel.offsetWidth, h = panel.offsetHeight;
-    const maxRight = Math.max(PAD, window.innerWidth - w - PAD);
-    const maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
+    var w = panel.offsetWidth,
+      h = panel.offsetHeight;
+    var maxRight = Math.max(PAD, window.innerWidth - w - PAD);
+    var maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
     offsetRef.current = {
       x: Math.min(maxRight, Math.max(PAD, offsetRef.current.x)),
-      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y)),
+      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y))
     };
     panel.style.right = offsetRef.current.x + 'px';
     panel.style.bottom = offsetRef.current.y + 'px';
   }, []);
-
-  React.useEffect(() => {
+  React.useEffect(function () {
     if (!open) return;
     clampToViewport();
     if (typeof ResizeObserver === 'undefined') {
       window.addEventListener('resize', clampToViewport);
-      return () => window.removeEventListener('resize', clampToViewport);
+      return function () {
+        return window.removeEventListener('resize', clampToViewport);
+      };
     }
-    const ro = new ResizeObserver(clampToViewport);
+    var ro = new ResizeObserver(clampToViewport);
     ro.observe(document.documentElement);
-    return () => ro.disconnect();
+    return function () {
+      return ro.disconnect();
+    };
   }, [open, clampToViewport]);
-
-  React.useEffect(() => {
-    const onMsg = (e) => {
-      const t = e?.data?.type;
-      if (t === '__activate_edit_mode') setOpen(true);
-      else if (t === '__deactivate_edit_mode') setOpen(false);
+  React.useEffect(function () {
+    var onMsg = function onMsg(e) {
+      var _e$data;
+      var t = e === null || e === void 0 || (_e$data = e.data) === null || _e$data === void 0 ? void 0 : _e$data.type;
+      if (t === '__activate_edit_mode') setOpen(true);else if (t === '__deactivate_edit_mode') setOpen(false);
     };
     window.addEventListener('message', onMsg);
-    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
-    return () => window.removeEventListener('message', onMsg);
+    window.parent.postMessage({
+      type: '__edit_mode_available'
+    }, '*');
+    return function () {
+      return window.removeEventListener('message', onMsg);
+    };
   }, []);
-
-  const dismiss = () => {
+  var dismiss = function dismiss() {
     setOpen(false);
-    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+    window.parent.postMessage({
+      type: '__edit_mode_dismissed'
+    }, '*');
   };
-
-  const onDragStart = (e) => {
-    const panel = dragRef.current;
+  var onDragStart = function onDragStart(e) {
+    var panel = dragRef.current;
     if (!panel) return;
-    const r = panel.getBoundingClientRect();
-    const sx = e.clientX, sy = e.clientY;
-    const startRight = window.innerWidth - r.right;
-    const startBottom = window.innerHeight - r.bottom;
-    const move = (ev) => {
+    var r = panel.getBoundingClientRect();
+    var sx = e.clientX,
+      sy = e.clientY;
+    var startRight = window.innerWidth - r.right;
+    var startBottom = window.innerHeight - r.bottom;
+    var move = function move(ev) {
       offsetRef.current = {
         x: startRight - (ev.clientX - sx),
-        y: startBottom - (ev.clientY - sy),
+        y: startBottom - (ev.clientY - sy)
       };
       clampToViewport();
     };
-    const up = () => {
+    var _up = function up() {
       window.removeEventListener('mousemove', move);
-      window.removeEventListener('mouseup', up);
+      window.removeEventListener('mouseup', _up);
     };
     window.addEventListener('mousemove', move);
-    window.addEventListener('mouseup', up);
+    window.addEventListener('mouseup', _up);
   };
-
   if (!open) return null;
-  return (
-    <>
-      <style>{__TWEAKS_STYLE}</style>
-      <div ref={dragRef} className="twk-panel" data-noncommentable=""
-           style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
-        <div className="twk-hd" onMouseDown={onDragStart}>
-          <b>{title}</b>
-          <button className="twk-x" aria-label="Close tweaks"
-                  onMouseDown={(e) => e.stopPropagation()}
-                  onClick={dismiss}>✕</button>
-        </div>
-        <div className="twk-body">
-          {children}
-          {hasDeckStage && railEnabled && !noDeckControls && (
-            <TweakSection label="Deck">
-              <TweakToggle label="Thumbnail rail" value={railVisible} onChange={toggleRail} />
-            </TweakSection>
-          )}
-        </div>
-      </div>
-    </>
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("style", null, __TWEAKS_STYLE), /*#__PURE__*/React.createElement("div", {
+    ref: dragRef,
+    className: "twk-panel",
+    "data-noncommentable": "",
+    style: {
+      right: offsetRef.current.x,
+      bottom: offsetRef.current.y
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "twk-hd",
+    onMouseDown: onDragStart
+  }, /*#__PURE__*/React.createElement("b", null, title), /*#__PURE__*/React.createElement("button", {
+    className: "twk-x",
+    "aria-label": "Close tweaks",
+    onMouseDown: function onMouseDown(e) {
+      return e.stopPropagation();
+    },
+    onClick: dismiss
+  }, "\u2715")), /*#__PURE__*/React.createElement("div", {
+    className: "twk-body"
+  }, children, hasDeckStage && railEnabled && !noDeckControls && /*#__PURE__*/React.createElement(TweakSection, {
+    label: "Deck"
+  }, /*#__PURE__*/React.createElement(TweakToggle, {
+    label: "Thumbnail rail",
+    value: railVisible,
+    onChange: toggleRail
+  })))));
 }
 
 // ── Layout helpers ──────────────────────────────────────────────────────────
 
-function TweakSection({ label, children }) {
-  return (
-    <>
-      <div className="twk-sect">{label}</div>
-      {children}
-    </>
-  );
+function TweakSection(_ref3) {
+  var label = _ref3.label,
+    children = _ref3.children;
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "twk-sect"
+  }, label), children);
 }
-
-function TweakRow({ label, value, children, inline = false }) {
-  return (
-    <div className={inline ? 'twk-row twk-row-h' : 'twk-row'}>
-      <div className="twk-lbl">
-        <span>{label}</span>
-        {value != null && <span className="twk-val">{value}</span>}
-      </div>
-      {children}
-    </div>
-  );
+function TweakRow(_ref4) {
+  var label = _ref4.label,
+    value = _ref4.value,
+    children = _ref4.children,
+    _ref4$inline = _ref4.inline,
+    inline = _ref4$inline === void 0 ? false : _ref4$inline;
+  return /*#__PURE__*/React.createElement("div", {
+    className: inline ? 'twk-row twk-row-h' : 'twk-row'
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "twk-lbl"
+  }, /*#__PURE__*/React.createElement("span", null, label), value != null && /*#__PURE__*/React.createElement("span", {
+    className: "twk-val"
+  }, value)), children);
 }
 
 // ── Controls ────────────────────────────────────────────────────────────────
 
-function TweakSlider({ label, value, min = 0, max = 100, step = 1, unit = '', onChange }) {
-  return (
-    <TweakRow label={label} value={`${value}${unit}`}>
-      <input type="range" className="twk-slider" min={min} max={max} step={step}
-             value={value} onChange={(e) => onChange(Number(e.target.value))} />
-    </TweakRow>
-  );
+function TweakSlider(_ref5) {
+  var label = _ref5.label,
+    value = _ref5.value,
+    _ref5$min = _ref5.min,
+    min = _ref5$min === void 0 ? 0 : _ref5$min,
+    _ref5$max = _ref5.max,
+    max = _ref5$max === void 0 ? 100 : _ref5$max,
+    _ref5$step = _ref5.step,
+    step = _ref5$step === void 0 ? 1 : _ref5$step,
+    _ref5$unit = _ref5.unit,
+    unit = _ref5$unit === void 0 ? '' : _ref5$unit,
+    _onChange = _ref5.onChange;
+  return /*#__PURE__*/React.createElement(TweakRow, {
+    label: label,
+    value: "".concat(value).concat(unit)
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "range",
+    className: "twk-slider",
+    min: min,
+    max: max,
+    step: step,
+    value: value,
+    onChange: function onChange(e) {
+      return _onChange(Number(e.target.value));
+    }
+  }));
 }
-
-function TweakToggle({ label, value, onChange }) {
-  return (
-    <div className="twk-row twk-row-h">
-      <div className="twk-lbl"><span>{label}</span></div>
-      <button type="button" className="twk-toggle" data-on={value ? '1' : '0'}
-              role="switch" aria-checked={!!value}
-              onClick={() => onChange(!value)}><i /></button>
-    </div>
-  );
+function TweakToggle(_ref6) {
+  var label = _ref6.label,
+    value = _ref6.value,
+    onChange = _ref6.onChange;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "twk-row twk-row-h"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "twk-lbl"
+  }, /*#__PURE__*/React.createElement("span", null, label)), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "twk-toggle",
+    "data-on": value ? '1' : '0',
+    role: "switch",
+    "aria-checked": !!value,
+    onClick: function onClick() {
+      return onChange(!value);
+    }
+  }, /*#__PURE__*/React.createElement("i", null)));
 }
-
-function TweakSelect({ label, value, options, onChange }) {
-  return (
-    <TweakRow label={label}>
-      <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}>
-        {options.map((o) => {
-          const v = typeof o === 'object' ? o.value : o;
-          const l = typeof o === 'object' ? o.label : o;
-          return <option key={v} value={v}>{l}</option>;
-        })}
-      </select>
-    </TweakRow>
-  );
+function TweakSelect(_ref7) {
+  var label = _ref7.label,
+    value = _ref7.value,
+    options = _ref7.options,
+    _onChange2 = _ref7.onChange;
+  return /*#__PURE__*/React.createElement(TweakRow, {
+    label: label
+  }, /*#__PURE__*/React.createElement("select", {
+    className: "twk-field",
+    value: value,
+    onChange: function onChange(e) {
+      return _onChange2(e.target.value);
+    }
+  }, options.map(function (o) {
+    var v = _typeof(o) === 'object' ? o.value : o;
+    var l = _typeof(o) === 'object' ? o.label : o;
+    return /*#__PURE__*/React.createElement("option", {
+      key: v,
+      value: v
+    }, l);
+  })));
 }
-
-function TweakRadio({ label, value, options, onChange }) {
-  const trackRef = React.useRef(null);
-  const [dragging, setDragging] = React.useState(false);
-  const valueRef = React.useRef(value);
+function TweakRadio(_ref8) {
+  var _$3$options$length;
+  var label = _ref8.label,
+    value = _ref8.value,
+    options = _ref8.options,
+    _onChange3 = _ref8.onChange;
+  var trackRef = React.useRef(null);
+  var _React$useState9 = React.useState(false),
+    _React$useState0 = _slicedToArray(_React$useState9, 2),
+    dragging = _React$useState0[0],
+    setDragging = _React$useState0[1];
+  var valueRef = React.useRef(value);
   valueRef.current = value;
-
-  const labelLen = (o) => String(typeof o === 'object' ? o.label : o).length;
-  const maxLen = options.reduce((m, o) => Math.max(m, labelLen(o)), 0);
-  const fitsAsSegments = maxLen <= ({ 2: 16, 3: 10 }[options.length] ?? 0);
+  var labelLen = function labelLen(o) {
+    return String(_typeof(o) === 'object' ? o.label : o).length;
+  };
+  var maxLen = options.reduce(function (m, o) {
+    return Math.max(m, labelLen(o));
+  }, 0);
+  var fitsAsSegments = maxLen <= ((_$3$options$length = {
+    2: 16,
+    3: 10
+  }[options.length]) !== null && _$3$options$length !== void 0 ? _$3$options$length : 0);
   if (!fitsAsSegments) {
-    const resolve = (s) => {
-      const m = options.find((o) => String(typeof o === 'object' ? o.value : o) === s);
-      return m === undefined ? s : typeof m === 'object' ? m.value : m;
+    var resolve = function resolve(s) {
+      var m = options.find(function (o) {
+        return String(_typeof(o) === 'object' ? o.value : o) === s;
+      });
+      return m === undefined ? s : _typeof(m) === 'object' ? m.value : m;
     };
-    return <TweakSelect label={label} value={value} options={options}
-                        onChange={(s) => onChange(resolve(s))} />;
+    return /*#__PURE__*/React.createElement(TweakSelect, {
+      label: label,
+      value: value,
+      options: options,
+      onChange: function onChange(s) {
+        return _onChange3(resolve(s));
+      }
+    });
   }
-  const opts = options.map((o) => (typeof o === 'object' ? o : { value: o, label: o }));
-  const idx = Math.max(0, opts.findIndex((o) => o.value === value));
-  const n = opts.length;
-
-  const segAt = (clientX) => {
-    const r = trackRef.current.getBoundingClientRect();
-    const inner = r.width - 4;
-    const i = Math.floor(((clientX - r.left - 2) / inner) * n);
+  var opts = options.map(function (o) {
+    return _typeof(o) === 'object' ? o : {
+      value: o,
+      label: o
+    };
+  });
+  var idx = Math.max(0, opts.findIndex(function (o) {
+    return o.value === value;
+  }));
+  var n = opts.length;
+  var segAt = function segAt(clientX) {
+    var r = trackRef.current.getBoundingClientRect();
+    var inner = r.width - 4;
+    var i = Math.floor((clientX - r.left - 2) / inner * n);
     return opts[Math.max(0, Math.min(n - 1, i))].value;
   };
-
-  const onPointerDown = (e) => {
+  var onPointerDown = function onPointerDown(e) {
     setDragging(true);
-    const v0 = segAt(e.clientX);
-    if (v0 !== valueRef.current) onChange(v0);
-    const move = (ev) => {
+    var v0 = segAt(e.clientX);
+    if (v0 !== valueRef.current) _onChange3(v0);
+    var move = function move(ev) {
       if (!trackRef.current) return;
-      const v = segAt(ev.clientX);
-      if (v !== valueRef.current) onChange(v);
+      var v = segAt(ev.clientX);
+      if (v !== valueRef.current) _onChange3(v);
     };
-    const up = () => {
+    var _up2 = function up() {
       setDragging(false);
       window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointerup', _up2);
     };
     window.addEventListener('pointermove', move);
-    window.addEventListener('pointerup', up);
+    window.addEventListener('pointerup', _up2);
   };
-
-  return (
-    <TweakRow label={label}>
-      <div ref={trackRef} role="radiogroup" onPointerDown={onPointerDown}
-           className={dragging ? 'twk-seg dragging' : 'twk-seg'}>
-        <div className="twk-seg-thumb"
-             style={{ left: `calc(2px + ${idx} * (100% - 4px) / ${n})`,
-                      width: `calc((100% - 4px) / ${n})` }} />
-        {opts.map((o) => (
-          <button key={o.value} type="button" role="radio" aria-checked={o.value === value}>
-            {o.label}
-          </button>
-        ))}
-      </div>
-    </TweakRow>
-  );
+  return /*#__PURE__*/React.createElement(TweakRow, {
+    label: label
+  }, /*#__PURE__*/React.createElement("div", {
+    ref: trackRef,
+    role: "radiogroup",
+    onPointerDown: onPointerDown,
+    className: dragging ? 'twk-seg dragging' : 'twk-seg'
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "twk-seg-thumb",
+    style: {
+      left: "calc(2px + ".concat(idx, " * (100% - 4px) / ").concat(n, ")"),
+      width: "calc((100% - 4px) / ".concat(n, ")")
+    }
+  }), opts.map(function (o) {
+    return /*#__PURE__*/React.createElement("button", {
+      key: o.value,
+      type: "button",
+      role: "radio",
+      "aria-checked": o.value === value
+    }, o.label);
+  })));
 }
-
-function TweakText({ label, value, placeholder, onChange }) {
-  return (
-    <TweakRow label={label}>
-      <input className="twk-field" type="text" value={value} placeholder={placeholder}
-             onChange={(e) => onChange(e.target.value)} />
-    </TweakRow>
-  );
+function TweakText(_ref9) {
+  var label = _ref9.label,
+    value = _ref9.value,
+    placeholder = _ref9.placeholder,
+    _onChange4 = _ref9.onChange;
+  return /*#__PURE__*/React.createElement(TweakRow, {
+    label: label
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "twk-field",
+    type: "text",
+    value: value,
+    placeholder: placeholder,
+    onChange: function onChange(e) {
+      return _onChange4(e.target.value);
+    }
+  }));
 }
-
-function TweakNumber({ label, value, min, max, step = 1, unit = '', onChange }) {
-  const clamp = (n) => {
+function TweakNumber(_ref0) {
+  var label = _ref0.label,
+    value = _ref0.value,
+    min = _ref0.min,
+    max = _ref0.max,
+    _ref0$step = _ref0.step,
+    step = _ref0$step === void 0 ? 1 : _ref0$step,
+    _ref0$unit = _ref0.unit,
+    unit = _ref0$unit === void 0 ? '' : _ref0$unit,
+    _onChange5 = _ref0.onChange;
+  var clamp = function clamp(n) {
     if (min != null && n < min) return min;
     if (max != null && n > max) return max;
     return n;
   };
-  const startRef = React.useRef({ x: 0, val: 0 });
-  const onScrubStart = (e) => {
+  var startRef = React.useRef({
+    x: 0,
+    val: 0
+  });
+  var onScrubStart = function onScrubStart(e) {
     e.preventDefault();
-    startRef.current = { x: e.clientX, val: value };
-    const decimals = (String(step).split('.')[1] || '').length;
-    const move = (ev) => {
-      const dx = ev.clientX - startRef.current.x;
-      const raw = startRef.current.val + dx * step;
-      const snapped = Math.round(raw / step) * step;
-      onChange(clamp(Number(snapped.toFixed(decimals))));
+    startRef.current = {
+      x: e.clientX,
+      val: value
     };
-    const up = () => {
+    var decimals = (String(step).split('.')[1] || '').length;
+    var move = function move(ev) {
+      var dx = ev.clientX - startRef.current.x;
+      var raw = startRef.current.val + dx * step;
+      var snapped = Math.round(raw / step) * step;
+      _onChange5(clamp(Number(snapped.toFixed(decimals))));
+    };
+    var _up3 = function up() {
       window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointerup', _up3);
     };
     window.addEventListener('pointermove', move);
-    window.addEventListener('pointerup', up);
+    window.addEventListener('pointerup', _up3);
   };
-  return (
-    <div className="twk-num">
-      <span className="twk-num-lbl" onPointerDown={onScrubStart}>{label}</span>
-      <input type="number" value={value} min={min} max={max} step={step}
-             onChange={(e) => onChange(clamp(Number(e.target.value)))} />
-      {unit && <span className="twk-num-unit">{unit}</span>}
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "twk-num"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "twk-num-lbl",
+    onPointerDown: onScrubStart
+  }, label), /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    value: value,
+    min: min,
+    max: max,
+    step: step,
+    onChange: function onChange(e) {
+      return _onChange5(clamp(Number(e.target.value)));
+    }
+  }), unit && /*#__PURE__*/React.createElement("span", {
+    className: "twk-num-unit"
+  }, unit));
 }
-
 function __twkIsLight(hex) {
-  const h = String(hex).replace('#', '');
-  const x = h.length === 3 ? h.replace(/./g, (c) => c + c) : h.padEnd(6, '0');
-  const n = parseInt(x.slice(0, 6), 16);
+  var h = String(hex).replace('#', '');
+  var x = h.length === 3 ? h.replace(/./g, function (c) {
+    return c + c;
+  }) : h.padEnd(6, '0');
+  var n = parseInt(x.slice(0, 6), 16);
   if (Number.isNaN(n)) return true;
-  const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  var r = n >> 16 & 255,
+    g = n >> 8 & 255,
+    b = n & 255;
   return r * 299 + g * 587 + b * 114 > 148000;
 }
-
-const __TwkCheck = ({ light }) => (
-  <svg viewBox="0 0 14 14" aria-hidden="true">
-    <path d="M3 7.2 5.8 10 11 4.2" fill="none" strokeWidth="2.2"
-          strokeLinecap="round" strokeLinejoin="round"
-          stroke={light ? 'rgba(0,0,0,.78)' : '#fff'} />
-  </svg>
-);
-
-function TweakColor({ label, value, options, onChange }) {
+var __TwkCheck = function __TwkCheck(_ref1) {
+  var light = _ref1.light;
+  return /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 14 14",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M3 7.2 5.8 10 11 4.2",
+    fill: "none",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    stroke: light ? 'rgba(0,0,0,.78)' : '#fff'
+  }));
+};
+function TweakColor(_ref10) {
+  var label = _ref10.label,
+    value = _ref10.value,
+    options = _ref10.options,
+    _onChange6 = _ref10.onChange;
   if (!options || !options.length) {
-    return (
-      <div className="twk-row twk-row-h">
-        <div className="twk-lbl"><span>{label}</span></div>
-        <input type="color" className="twk-swatch" value={value}
-               onChange={(e) => onChange(e.target.value)} />
-      </div>
-    );
+    return /*#__PURE__*/React.createElement("div", {
+      className: "twk-row twk-row-h"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "twk-lbl"
+    }, /*#__PURE__*/React.createElement("span", null, label)), /*#__PURE__*/React.createElement("input", {
+      type: "color",
+      className: "twk-swatch",
+      value: value,
+      onChange: function onChange(e) {
+        return _onChange6(e.target.value);
+      }
+    }));
   }
-  const key = (o) => String(JSON.stringify(o)).toLowerCase();
-  const cur = key(value);
-  return (
-    <TweakRow label={label}>
-      <div className="twk-chips" role="radiogroup">
-        {options.map((o, i) => {
-          const colors = Array.isArray(o) ? o : [o];
-          const [hero, ...rest] = colors;
-          const sup = rest.slice(0, 4);
-          const on = key(o) === cur;
-          return (
-            <button key={i} type="button" className="twk-chip" role="radio"
-                    aria-checked={on} data-on={on ? '1' : '0'}
-                    aria-label={colors.join(', ')} title={colors.join(' · ')}
-                    style={{ background: hero }}
-                    onClick={() => onChange(o)}>
-              {sup.length > 0 && (
-                <span>
-                  {sup.map((c, j) => <i key={j} style={{ background: c }} />)}
-                </span>
-              )}
-              {on && <__TwkCheck light={__twkIsLight(hero)} />}
-            </button>
-          );
-        })}
-      </div>
-    </TweakRow>
-  );
+  var key = function key(o) {
+    return String(JSON.stringify(o)).toLowerCase();
+  };
+  var cur = key(value);
+  return /*#__PURE__*/React.createElement(TweakRow, {
+    label: label
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "twk-chips",
+    role: "radiogroup"
+  }, options.map(function (o, i) {
+    var colors = Array.isArray(o) ? o : [o];
+    var _colors = _toArray(colors),
+      hero = _colors[0],
+      rest = _arrayLikeToArray(_colors).slice(1);
+    var sup = rest.slice(0, 4);
+    var on = key(o) === cur;
+    return /*#__PURE__*/React.createElement("button", {
+      key: i,
+      type: "button",
+      className: "twk-chip",
+      role: "radio",
+      "aria-checked": on,
+      "data-on": on ? '1' : '0',
+      "aria-label": colors.join(', '),
+      title: colors.join(' · '),
+      style: {
+        background: hero
+      },
+      onClick: function onClick() {
+        return _onChange6(o);
+      }
+    }, sup.length > 0 && /*#__PURE__*/React.createElement("span", null, sup.map(function (c, j) {
+      return /*#__PURE__*/React.createElement("i", {
+        key: j,
+        style: {
+          background: c
+        }
+      });
+    })), on && /*#__PURE__*/React.createElement(__TwkCheck, {
+      light: __twkIsLight(hero)
+    }));
+  })));
 }
-
-function TweakButton({ label, onClick, secondary = false }) {
-  return (
-    <button type="button" className={secondary ? 'twk-btn secondary' : 'twk-btn'}
-            onClick={onClick}>{label}</button>
-  );
+function TweakButton(_ref11) {
+  var label = _ref11.label,
+    onClick = _ref11.onClick,
+    _ref11$secondary = _ref11.secondary,
+    secondary = _ref11$secondary === void 0 ? false : _ref11$secondary;
+  return /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: secondary ? 'twk-btn secondary' : 'twk-btn',
+    onClick: onClick
+  }, label);
 }
-
 Object.assign(window, {
-  useTweaks, TweaksPanel, TweakSection, TweakRow,
-  TweakSlider, TweakToggle, TweakRadio, TweakSelect,
-  TweakText, TweakNumber, TweakColor, TweakButton,
+  useTweaks: useTweaks,
+  TweaksPanel: TweaksPanel,
+  TweakSection: TweakSection,
+  TweakRow: TweakRow,
+  TweakSlider: TweakSlider,
+  TweakToggle: TweakToggle,
+  TweakRadio: TweakRadio,
+  TweakSelect: TweakSelect,
+  TweakText: TweakText,
+  TweakNumber: TweakNumber,
+  TweakColor: TweakColor,
+  TweakButton: TweakButton
 });
+
 </script>
 
-<script type="text/babel">
+<script>
+"use strict";
+
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 /* global React, ReactDOM */
-const { useState, useEffect, useRef, useMemo, useCallback } = React;
+var _React = React,
+  useState = _React.useState,
+  useEffect = _React.useEffect,
+  useRef = _React.useRef,
+  useMemo = _React.useMemo,
+  useCallback = _React.useCallback;
 
 // ============ TWEAK DEFAULTS ============
-const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+var TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "accentHue": 285,
   "glowIntensity": 1,
   "reduceMotion": false,
   "showGrid": true,
   "accentMode": "neon"
-}/*EDITMODE-END*/;
+} /*EDITMODE-END*/;
 
 // ============ ICONS ============
-const Icon = {
-  bolt: (p) => <svg viewBox="0 0 24 24" fill="currentColor" {...p}><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>,
-  gradCap: (p) => (
-    <svg viewBox="0 0 80 60" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" {...p}>
-      <path d="M5 22 L40 8 L75 22 L40 36 Z" />
-      <path d="M18 28 L18 40 C18 44 28 47 40 47 C52 47 62 44 62 40 L62 28" />
-      <circle cx="40" cy="22" r="1.6" fill="currentColor" />
-      <path d="M62 24 L66 32 L66 44" />
-      <path d="M64 44 Q66 50 68 44 Z" fill="currentColor" />
-    </svg>
-  ),
-  diploma: (p) => (
-    <svg viewBox="0 0 64 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" {...p}>
-      <path d="M10 12 L10 36 C10 40 12 42 16 42 L48 42 C52 42 54 40 54 36 L54 12 C54 8 52 6 48 6 L16 6 C12 6 10 8 10 12 Z" />
-      <path d="M16 18 L48 18 M16 24 L42 24 M16 30 L46 30" strokeOpacity="0.6" />
-      <path d="M22 38 L22 48 L28 44 L34 48 L34 38" fill="currentColor" fillOpacity="0.15" />
-    </svg>
-  ),
-  spark: (p) => (
-    <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
-      <path d="M12 2 L13.5 10 L22 11.5 L13.5 13 L12 22 L10.5 13 L2 11.5 L10.5 10 Z" />
-    </svg>
-  ),
-  arrow: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M5 12h14m-6-6 6 6-6 6"/></svg>,
-  letter: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...p}><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>,
-  staff: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15 19c0-2.5 2-4.5 4.5-4.5"/></svg>,
-  star: (p) => <svg viewBox="0 0 24 24" fill="currentColor" {...p}><path d="m12 2 2.6 6.6L22 9.7l-5.4 4.7L18.4 22 12 18.1 5.6 22l1.8-7.6L2 9.7l7.4-1.1L12 2Z"/></svg>,
-  users: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="12" cy="8" r="3.5"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>,
-  list: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>,
-  ad: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...p}><rect x="3" y="4" width="18" height="14" rx="2"/><path d="m3 8 9 5 9-5"/><circle cx="17" cy="6" r="2" fill="currentColor"/></svg>,
-  search: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" {...p}><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>,
-  chevron: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="m6 9 6 6 6-6"/></svg>,
-  close: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" {...p}><path d="M6 6 18 18M6 18 18 6"/></svg>,
+var Icon = {
+  bolt: function bolt(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 24 24",
+      fill: "currentColor"
+    }, p), /*#__PURE__*/React.createElement("path", {
+      d: "M13 2 4 14h7l-1 8 9-12h-7l1-8Z"
+    }));
+  },
+  gradCap: function gradCap(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 80 60",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2.2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, p), /*#__PURE__*/React.createElement("path", {
+      d: "M5 22 L40 8 L75 22 L40 36 Z"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M18 28 L18 40 C18 44 28 47 40 47 C52 47 62 44 62 40 L62 28"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: "40",
+      cy: "22",
+      r: "1.6",
+      fill: "currentColor"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M62 24 L66 32 L66 44"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M64 44 Q66 50 68 44 Z",
+      fill: "currentColor"
+    }));
+  },
+  diploma: function diploma(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 64 48",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2.2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, p), /*#__PURE__*/React.createElement("path", {
+      d: "M10 12 L10 36 C10 40 12 42 16 42 L48 42 C52 42 54 40 54 36 L54 12 C54 8 52 6 48 6 L16 6 C12 6 10 8 10 12 Z"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M16 18 L48 18 M16 24 L42 24 M16 30 L46 30",
+      strokeOpacity: "0.6"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M22 38 L22 48 L28 44 L34 48 L34 38",
+      fill: "currentColor",
+      fillOpacity: "0.15"
+    }));
+  },
+  spark: function spark(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 24 24",
+      fill: "currentColor"
+    }, p), /*#__PURE__*/React.createElement("path", {
+      d: "M12 2 L13.5 10 L22 11.5 L13.5 13 L12 22 L10.5 13 L2 11.5 L10.5 10 Z"
+    }));
+  },
+  arrow: function arrow(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, p), /*#__PURE__*/React.createElement("path", {
+      d: "M5 12h14m-6-6 6 6-6 6"
+    }));
+  },
+  letter: function letter(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.6",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, p), /*#__PURE__*/React.createElement("rect", {
+      x: "3",
+      y: "5",
+      width: "18",
+      height: "14",
+      rx: "2"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "m3 7 9 6 9-6"
+    }));
+  },
+  staff: function staff(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.6",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, p), /*#__PURE__*/React.createElement("circle", {
+      cx: "9",
+      cy: "8",
+      r: "3"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: "17",
+      cy: "10",
+      r: "2.5"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M15 19c0-2.5 2-4.5 4.5-4.5"
+    }));
+  },
+  star: function star(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 24 24",
+      fill: "currentColor"
+    }, p), /*#__PURE__*/React.createElement("path", {
+      d: "m12 2 2.6 6.6L22 9.7l-5.4 4.7L18.4 22 12 18.1 5.6 22l1.8-7.6L2 9.7l7.4-1.1L12 2Z"
+    }));
+  },
+  users: function users(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.6",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, p), /*#__PURE__*/React.createElement("circle", {
+      cx: "12",
+      cy: "8",
+      r: "3.5"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M4 21c0-4 3.6-7 8-7s8 3 8 7"
+    }));
+  },
+  list: function list(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.8",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, p), /*#__PURE__*/React.createElement("path", {
+      d: "M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"
+    }));
+  },
+  ad: function ad(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.6",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, p), /*#__PURE__*/React.createElement("rect", {
+      x: "3",
+      y: "4",
+      width: "18",
+      height: "14",
+      rx: "2"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "m3 8 9 5 9-5"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: "17",
+      cy: "6",
+      r: "2",
+      fill: "currentColor"
+    }));
+  },
+  search: function search(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round"
+    }, p), /*#__PURE__*/React.createElement("circle", {
+      cx: "11",
+      cy: "11",
+      r: "7"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "m20 20-3.5-3.5"
+    }));
+  },
+  chevron: function chevron(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, p), /*#__PURE__*/React.createElement("path", {
+      d: "m6 9 6 6 6-6"
+    }));
+  },
+  close: function close(p) {
+    return /*#__PURE__*/React.createElement("svg", _extends({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round"
+    }, p), /*#__PURE__*/React.createElement("path", {
+      d: "M6 6 18 18M6 18 18 6"
+    }));
+  }
 };
 
 // ============ DDC LOGO (recreated) ============
-function DDCLogo({ size = 28, color = "currentColor" }) {
-  return (
-    <svg viewBox="0 0 120 40" width={size * 3} height={size} style={{ display: "block" }}>
-      <text x="36" y="28" fontFamily="'Orbitron', sans-serif" fontWeight="800" fontSize="22" fill={color} letterSpacing="2">DDC</text>
-      <g stroke={color} strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.9">
-        <path d="M4 34 L 28 34" />
-        <path d="M22 30 L 28 34 L 22 38" />
-        <path d="M8 36 L 12 36" opacity="0.7" />
-        <path d="M4 32 L 8 32" opacity="0.5" />
-      </g>
-    </svg>
-  );
+function DDCLogo(_ref) {
+  var _ref$size = _ref.size,
+    size = _ref$size === void 0 ? 28 : _ref$size,
+    _ref$color = _ref.color,
+    color = _ref$color === void 0 ? "currentColor" : _ref$color;
+  return /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 120 40",
+    width: size * 3,
+    height: size,
+    style: {
+      display: "block"
+    }
+  }, /*#__PURE__*/React.createElement("text", {
+    x: "36",
+    y: "28",
+    fontFamily: "'Orbitron', sans-serif",
+    fontWeight: "800",
+    fontSize: "22",
+    fill: color,
+    letterSpacing: "2"
+  }, "DDC"), /*#__PURE__*/React.createElement("g", {
+    stroke: color,
+    strokeWidth: "1.5",
+    strokeLinecap: "round",
+    fill: "none",
+    opacity: "0.9"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M4 34 L 28 34"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M22 30 L 28 34 L 22 38"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M8 36 L 12 36",
+    opacity: "0.7"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M4 32 L 8 32",
+    opacity: "0.5"
+  })));
 }
 
 // ============ COVER ============
-function Cover({ onEnter }) {
-  return (
-    <section className="cover" data-screen-label="01 Cover">
-      <div className="cover-image-wrap">
-        <img src="assets/cover-glow.png" alt="Velocity 2026" className="cover-image" />
-      </div>
-      <button className="cover-cta" onClick={onEnter}>
-        <span>Open Playbill</span>
-        <Icon.arrow width="18" height="18" />
-      </button>
-    </section>
-  );
+function Cover(_ref2) {
+  var onEnter = _ref2.onEnter;
+  return /*#__PURE__*/React.createElement("section", {
+    className: "cover",
+    "data-screen-label": "01 Cover"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cover-image-wrap"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "assets/cover-glow.png",
+    alt: "Velocity 2026",
+    className: "cover-image"
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "cover-cta",
+    onClick: onEnter
+  }, /*#__PURE__*/React.createElement("span", null, "Open Playbill"), /*#__PURE__*/React.createElement(Icon.arrow, {
+    width: "18",
+    height: "18"
+  })));
 }
 
 // ============ SECTION HEADER ============
-function SectionHeader({ kicker, title, subtitle }) {
-  return (
-    <header className="section-header">
-      <div className="kicker">
-        <span className="kicker-line" />
-        <span className="kicker-text">{kicker}</span>
-        <span className="kicker-line" />
-      </div>
-      <h2 className="section-title neon-text" data-text={title}>{title}</h2>
-      {subtitle && <p className="section-sub">{subtitle}</p>}
-    </header>
-  );
+function SectionHeader(_ref3) {
+  var kicker = _ref3.kicker,
+    title = _ref3.title,
+    subtitle = _ref3.subtitle;
+  return /*#__PURE__*/React.createElement("header", {
+    className: "section-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "kicker"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "kicker-line"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "kicker-text"
+  }, kicker), /*#__PURE__*/React.createElement("span", {
+    className: "kicker-line"
+  })), /*#__PURE__*/React.createElement("h2", {
+    className: "section-title neon-text",
+    "data-text": title
+  }, title), subtitle && /*#__PURE__*/React.createElement("p", {
+    className: "section-sub"
+  }, subtitle));
 }
 
 // ============ WELCOME ============
-function Welcome({ data }) {
-  return (
-    <section id="welcome" className="page" data-screen-label="02 Welcome">
-      <SectionHeader kicker="01 / Welcome" title="A NOTE FROM DDC" />
-      <div className="letter">
-        {data.body.map((p, i) => <p key={i}>{p}</p>)}
-        <div className="signature">
-          <div className="sig-line" />
-          <div>
-            <div className="sig-name">{data.from}</div>
-            <div className="sig-role">{data.role}</div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+function Welcome(_ref4) {
+  var data = _ref4.data;
+  return /*#__PURE__*/React.createElement("section", {
+    id: "welcome",
+    className: "page",
+    "data-screen-label": "02 Welcome"
+  }, /*#__PURE__*/React.createElement(SectionHeader, {
+    kicker: "01 / Welcome",
+    title: "A NOTE FROM DDC"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "letter"
+  }, data.body.map(function (p, i) {
+    return /*#__PURE__*/React.createElement("p", {
+      key: i
+    }, p);
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "signature"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sig-line"
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "sig-name"
+  }, data.from), /*#__PURE__*/React.createElement("div", {
+    className: "sig-role"
+  }, data.role)))));
 }
 
 // ============ STAFF ============
-function Staff({ data }) {
-  return (
-    <section id="staff" className="page" data-screen-label="03 Staff">
-      <SectionHeader kicker="02 / Staff" title="THE TEAM" subtitle="The dancers above, the people behind them." />
-
-      <div className="staff-owner">
-        <div className="owner-badge">Owner & Creative Director</div>
-        <div className="owner-name neon-text" data-text={data.owner.name}>{data.owner.name}</div>
-      </div>
-
-      <div className="staff-group">
-        <div className="group-label"><Icon.bolt width="14" height="14" /> Teachers</div>
-        <div className="staff-grid">
-          {data.teachers.map(n => (
-            <div key={n} className="staff-chip">{n}</div>
-          ))}
-        </div>
-      </div>
-
-      <div className="staff-group">
-        <div className="group-label"><Icon.bolt width="14" height="14" /> Assistants</div>
-        <div className="staff-grid">
-          {data.assistants.map(n => (
-            <div key={n} className="staff-chip alt">{n}</div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+function Staff(_ref5) {
+  var data = _ref5.data;
+  return /*#__PURE__*/React.createElement("section", {
+    id: "staff",
+    className: "page",
+    "data-screen-label": "03 Staff"
+  }, /*#__PURE__*/React.createElement(SectionHeader, {
+    kicker: "02 / Staff",
+    title: "THE TEAM",
+    subtitle: "The dancers above, the people behind them."
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "staff-owner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "owner-badge"
+  }, "Owner & Creative Director"), /*#__PURE__*/React.createElement("div", {
+    className: "owner-name neon-text",
+    "data-text": data.owner.name
+  }, data.owner.name)), /*#__PURE__*/React.createElement("div", {
+    className: "staff-group"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "group-label"
+  }, /*#__PURE__*/React.createElement(Icon.bolt, {
+    width: "14",
+    height: "14"
+  }), " Teachers"), /*#__PURE__*/React.createElement("div", {
+    className: "staff-grid"
+  }, data.teachers.map(function (n) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: n,
+      className: "staff-chip"
+    }, n);
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "staff-group"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "group-label"
+  }, /*#__PURE__*/React.createElement(Icon.bolt, {
+    width: "14",
+    height: "14"
+  }), " Assistants"), /*#__PURE__*/React.createElement("div", {
+    className: "staff-grid"
+  }, data.assistants.map(function (n) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: n,
+      className: "staff-chip alt"
+    }, n);
+  }))));
 }
 
 // ============ SENIORS ============
-function Seniors({ data }) {
-  return (
-    <section id="seniors" className="page" data-screen-label="04 Seniors">
-      <SectionHeader kicker="03 / Class of 2026" title="OUR SENIORS" subtitle="A decade on this stage. Tonight, we send them off." />
-      <div className="senior-grid">
-        {data.map((s, i) => (
-          <article key={s.name} className={`senior-card v2 ${i % 2 ? "flip" : ""}`}>
-            <div className="senior-watermark" aria-hidden="true">26</div>
-
-            <div className="sticker sticker-cap" aria-hidden="true">
-              <Icon.gradCap width="130" height="98" />
-            </div>
-
-            <div className="senior-photos">
-              <figure className="senior-photo main">
-                <span className="senior-corner tl" />
-                <span className="senior-corner tr" />
-                <span className="senior-corner bl" />
-                <span className="senior-corner br" />
-                <img src={s.photos[0]} alt={`${s.name} portrait 1`} />
-              </figure>
-              <figure className="senior-photo inset">
-                <span className="senior-corner tl" />
-                <span className="senior-corner tr" />
-                <span className="senior-corner bl" />
-                <span className="senior-corner br" />
-                <img src={s.photos[1]} alt={`${s.name} portrait 2`} />
-              </figure>
-            </div>
-
-            <div className="senior-meta">
-              <div className="senior-frame">
-                <div className="senior-tag">CLASS OF 2026</div>
-              </div>
-              <div className="senior-name neon-text" data-text={s.name}>{s.name}</div>
-              <blockquote className="senior-quote">
-                <span className="quote-text">Congratulations! We will miss you!</span>
-              </blockquote>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
+function Seniors(_ref6) {
+  var data = _ref6.data;
+  return /*#__PURE__*/React.createElement("section", {
+    id: "seniors",
+    className: "page",
+    "data-screen-label": "04 Seniors"
+  }, /*#__PURE__*/React.createElement(SectionHeader, {
+    kicker: "03 / Class of 2026",
+    title: "OUR SENIORS",
+    subtitle: "A decade on this stage. Tonight, we send them off."
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "senior-grid"
+  }, data.map(function (s, i) {
+    return /*#__PURE__*/React.createElement("article", {
+      key: s.name,
+      className: "senior-card v2 ".concat(i % 2 ? "flip" : "")
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "senior-watermark",
+      "aria-hidden": "true"
+    }, "26"), /*#__PURE__*/React.createElement("div", {
+      className: "sticker sticker-cap",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement(Icon.gradCap, {
+      width: "130",
+      height: "98"
+    })), /*#__PURE__*/React.createElement("div", {
+      className: "senior-photos"
+    }, /*#__PURE__*/React.createElement("figure", {
+      className: "senior-photo main"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "senior-corner tl"
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "senior-corner tr"
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "senior-corner bl"
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "senior-corner br"
+    }), /*#__PURE__*/React.createElement("img", {
+      src: s.photos[0],
+      alt: "".concat(s.name, " portrait 1")
+    })), /*#__PURE__*/React.createElement("figure", {
+      className: "senior-photo inset"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "senior-corner tl"
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "senior-corner tr"
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "senior-corner bl"
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "senior-corner br"
+    }), /*#__PURE__*/React.createElement("img", {
+      src: s.photos[1],
+      alt: "".concat(s.name, " portrait 2")
+    }))), /*#__PURE__*/React.createElement("div", {
+      className: "senior-meta"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "senior-frame"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "senior-tag"
+    }, "CLASS OF 2026")), /*#__PURE__*/React.createElement("div", {
+      className: "senior-name neon-text",
+      "data-text": s.name
+    }, s.name), /*#__PURE__*/React.createElement("blockquote", {
+      className: "senior-quote"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "quote-text"
+    }, "Congratulations! We will miss you!"))));
+  })));
 }
 
 // ============ CAST ============
-function Cast({ data }) {
-  const [q, setQ] = useState("");
-  const filtered = useMemo(() => {
+function Cast(_ref7) {
+  var data = _ref7.data;
+  var _useState = useState(""),
+    _useState2 = _slicedToArray(_useState, 2),
+    q = _useState2[0],
+    setQ = _useState2[1];
+  var filtered = useMemo(function () {
     if (!q.trim()) return data;
-    const needle = q.toLowerCase();
-    return data.filter(n => n.toLowerCase().includes(needle));
+    var needle = q.toLowerCase();
+    return data.filter(function (n) {
+      return n.toLowerCase().includes(needle);
+    });
   }, [q, data]);
-
-  const grouped = useMemo(() => {
-    const g = {};
-    filtered.forEach(name => {
-      const first = name[0].toUpperCase();
-      (g[first] ||= []).push(name);
+  var grouped = useMemo(function () {
+    var g = {};
+    filtered.forEach(function (name) {
+      var first = name[0].toUpperCase();
+      (g[first] || (g[first] = [])).push(name);
     });
     return g;
   }, [filtered]);
-
-  return (
-    <section id="cast" className="page" data-screen-label="05 Cast">
-      <SectionHeader kicker="04 / Cast" title="THE COMPANY" subtitle={`${data.length} dancers, one stage`} />
-      <div className="search-row">
-        <Icon.search width="16" height="16" />
-        <input
-          type="text"
-          placeholder="Search dancers…"
-          value={q}
-          onChange={e => setQ(e.target.value)}
-          className="search-input"
-        />
-        {q && <button className="search-clear" onClick={() => setQ("")} aria-label="Clear"><Icon.close width="14" height="14" /></button>}
-      </div>
-
-      {Object.keys(grouped).length === 0 ? (
-        <div className="empty-state">No dancers matching "{q}"</div>
-      ) : (
-        Object.entries(grouped).map(([letter, names]) => (
-          <div key={letter} className="cast-letter-group">
-            <div className="cast-letter">{letter}</div>
-            <div className="cast-grid">
-              {names.map(n => <div key={n} className="cast-name">{n}</div>)}
-            </div>
-          </div>
-        ))
-      )}
-    </section>
-  );
+  return /*#__PURE__*/React.createElement("section", {
+    id: "cast",
+    className: "page",
+    "data-screen-label": "05 Cast"
+  }, /*#__PURE__*/React.createElement(SectionHeader, {
+    kicker: "04 / Cast",
+    title: "THE COMPANY",
+    subtitle: "".concat(data.length, " dancers, one stage")
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "search-row"
+  }, /*#__PURE__*/React.createElement(Icon.search, {
+    width: "16",
+    height: "16"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    placeholder: "Search dancers\u2026",
+    value: q,
+    onChange: function onChange(e) {
+      return setQ(e.target.value);
+    },
+    className: "search-input"
+  }), q && /*#__PURE__*/React.createElement("button", {
+    className: "search-clear",
+    onClick: function onClick() {
+      return setQ("");
+    },
+    "aria-label": "Clear"
+  }, /*#__PURE__*/React.createElement(Icon.close, {
+    width: "14",
+    height: "14"
+  }))), Object.keys(grouped).length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, "No dancers matching \"", q, "\"") : Object.entries(grouped).map(function (_ref8) {
+    var _ref9 = _slicedToArray(_ref8, 2),
+      letter = _ref9[0],
+      names = _ref9[1];
+    return /*#__PURE__*/React.createElement("div", {
+      key: letter,
+      className: "cast-letter-group"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "cast-letter"
+    }, letter), /*#__PURE__*/React.createElement("div", {
+      className: "cast-grid"
+    }, names.map(function (n) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: n,
+        className: "cast-name"
+      }, n);
+    })));
+  }));
 }
 
 // ============ PROGRAM ============
-function ProgramRow({ item, open, onToggle }) {
-  const isSolo = !item.group;
-  const dancerCount = item.dancers ? item.dancers.split(",").length : 0;
-  return (
-    <div className={`prog-row ${open ? "open" : ""} ${isSolo ? "solo" : ""}`}>
-      <button className="prog-head" onClick={onToggle} aria-expanded={open}>
-        <div className="prog-num">{String(item.n).padStart(2, "0")}</div>
-        <div className="prog-meta">
-          <div className="prog-title">{item.title}</div>
-          <div className="prog-sub">
-            {item.group ? <span className="prog-group">{item.group}</span> : <span className="prog-solo">Solo</span>}
-            <span className="prog-dot">•</span>
-            <span className="prog-count">{dancerCount} {dancerCount === 1 ? "dancer" : "dancers"}</span>
-          </div>
-        </div>
-        <div className="prog-chev"><Icon.chevron width="18" height="18" /></div>
-      </button>
-      <div className="prog-body" style={{ maxHeight: open ? "600px" : 0 }}>
-        <div className="prog-body-inner">
-          <div className="prog-label">Performed by</div>
-          <div className="prog-dancers">{item.dancers}</div>
-          {item.assistant && (
-            <>
-              <div className="prog-label">Assistant{item.assistant.includes(",") ? "s" : ""}</div>
-              <div className="prog-dancers alt">{item.assistant}</div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+function ProgramRow(_ref0) {
+  var item = _ref0.item,
+    open = _ref0.open,
+    onToggle = _ref0.onToggle;
+  var isSolo = !item.group;
+  var dancerCount = item.dancers ? item.dancers.split(",").length : 0;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "prog-row ".concat(open ? "open" : "", " ").concat(isSolo ? "solo" : "")
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "prog-head",
+    onClick: onToggle,
+    "aria-expanded": open
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prog-num"
+  }, String(item.n).padStart(2, "0")), /*#__PURE__*/React.createElement("div", {
+    className: "prog-meta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prog-title"
+  }, item.title), /*#__PURE__*/React.createElement("div", {
+    className: "prog-sub"
+  }, item.group ? /*#__PURE__*/React.createElement("span", {
+    className: "prog-group"
+  }, item.group) : /*#__PURE__*/React.createElement("span", {
+    className: "prog-solo"
+  }, "Solo"), /*#__PURE__*/React.createElement("span", {
+    className: "prog-dot"
+  }, "\u2022"), /*#__PURE__*/React.createElement("span", {
+    className: "prog-count"
+  }, dancerCount, " ", dancerCount === 1 ? "dancer" : "dancers"))), /*#__PURE__*/React.createElement("div", {
+    className: "prog-chev"
+  }, /*#__PURE__*/React.createElement(Icon.chevron, {
+    width: "18",
+    height: "18"
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "prog-body",
+    style: {
+      maxHeight: open ? "600px" : 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prog-body-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prog-label"
+  }, "Performed by"), /*#__PURE__*/React.createElement("div", {
+    className: "prog-dancers"
+  }, item.dancers), item.assistant && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "prog-label"
+  }, "Assistant", item.assistant.includes(",") ? "s" : ""), /*#__PURE__*/React.createElement("div", {
+    className: "prog-dancers alt"
+  }, item.assistant)))));
 }
-
-function Program({ data }) {
-  const [openIdx, setOpenIdx] = useState(null);
-  const [showAll, setShowAll] = useState(false);
-
-  return (
-    <section id="program" className="page" data-screen-label="06 Program">
-      <SectionHeader kicker="05 / Program" title="THE SHOW" subtitle="59 routines. 1 intermission. Tap any number to see who's on stage." />
-
-      <div className="prog-tools">
-        <button className="prog-tool-btn" onClick={() => { setOpenIdx(null); }}>Collapse all</button>
-        <button className="prog-tool-btn" onClick={() => setShowAll(s => !s)}>{showAll ? "Hide all dancers" : "Show all dancers"}</button>
-      </div>
-
-      <div className="prog-list">
-        {data.map((item, i) => {
-          if (item.intermission) {
-            return (
-              <div key="int" className="prog-intermission">
-                <div className="int-bar" />
-                <div className="int-label">— Intermission —</div>
-                <div className="int-bar" />
-              </div>
-            );
-          }
-          const open = showAll || openIdx === i;
-          return (
-            <ProgramRow
-              key={item.n}
-              item={item}
-              open={open}
-              onToggle={() => setOpenIdx(openIdx === i ? null : i)}
-            />
-          );
-        })}
-      </div>
-    </section>
-  );
+function Program(_ref1) {
+  var data = _ref1.data;
+  var _useState3 = useState(null),
+    _useState4 = _slicedToArray(_useState3, 2),
+    openIdx = _useState4[0],
+    setOpenIdx = _useState4[1];
+  var _useState5 = useState(false),
+    _useState6 = _slicedToArray(_useState5, 2),
+    showAll = _useState6[0],
+    setShowAll = _useState6[1];
+  return /*#__PURE__*/React.createElement("section", {
+    id: "program",
+    className: "page",
+    "data-screen-label": "06 Program"
+  }, /*#__PURE__*/React.createElement(SectionHeader, {
+    kicker: "05 / Program",
+    title: "THE SHOW",
+    subtitle: "59 routines. 1 intermission. Tap any number to see who's on stage."
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "prog-tools"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "prog-tool-btn",
+    onClick: function onClick() {
+      setOpenIdx(null);
+    }
+  }, "Collapse all"), /*#__PURE__*/React.createElement("button", {
+    className: "prog-tool-btn",
+    onClick: function onClick() {
+      return setShowAll(function (s) {
+        return !s;
+      });
+    }
+  }, showAll ? "Hide all dancers" : "Show all dancers")), /*#__PURE__*/React.createElement("div", {
+    className: "prog-list"
+  }, data.map(function (item, i) {
+    if (item.intermission) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: "int",
+        className: "prog-intermission"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "int-bar"
+      }), /*#__PURE__*/React.createElement("div", {
+        className: "int-label"
+      }, "\u2014 Intermission \u2014"), /*#__PURE__*/React.createElement("div", {
+        className: "int-bar"
+      }));
+    }
+    var open = showAll || openIdx === i;
+    return /*#__PURE__*/React.createElement(ProgramRow, {
+      key: item.n,
+      item: item,
+      open: open,
+      onToggle: function onToggle() {
+        return setOpenIdx(openIdx === i ? null : i);
+      }
+    });
+  })));
 }
 
 // ============ ADS ============
-function Ads({ data }) {
-  const [active, setActive] = useState(null);
-
-  return (
-    <section id="ads" className="page" data-screen-label="07 Ads">
-      <SectionHeader kicker="06 / Ads" title="SHOUTOUTS & SPONSORS" subtitle="The families and businesses behind the season." />
-
-      <div className="ads-grid">
-        {data.map((ad, i) => (
-          <button key={i} className="ad-card" onClick={() => setActive(i)}>
-            <div className="ad-corner tl" />
-            <div className="ad-corner tr" />
-            <div className="ad-corner bl" />
-            <div className="ad-corner br" />
-            <img src={ad.src} alt={ad.alt} loading="lazy" />
-          </button>
-        ))}
-      </div>
-
-      {active !== null && (
-        <div className="ad-modal" onClick={() => setActive(null)}>
-          <button className="ad-modal-close" onClick={() => setActive(null)} aria-label="Close"><Icon.close width="22" height="22" /></button>
-          <button
-            className="ad-modal-nav left"
-            onClick={(e) => { e.stopPropagation(); setActive((active - 1 + data.length) % data.length); }}
-            aria-label="Previous"
-          >‹</button>
-          <img
-            src={data[active].src}
-            alt={data[active].alt}
-            onClick={e => e.stopPropagation()}
-          />
-          <button
-            className="ad-modal-nav right"
-            onClick={(e) => { e.stopPropagation(); setActive((active + 1) % data.length); }}
-            aria-label="Next"
-          >›</button>
-          <div className="ad-modal-counter">{active + 1} / {data.length}</div>
-        </div>
-      )}
-    </section>
-  );
+function Ads(_ref10) {
+  var data = _ref10.data;
+  var _useState7 = useState(null),
+    _useState8 = _slicedToArray(_useState7, 2),
+    active = _useState8[0],
+    setActive = _useState8[1];
+  return /*#__PURE__*/React.createElement("section", {
+    id: "ads",
+    className: "page",
+    "data-screen-label": "07 Ads"
+  }, /*#__PURE__*/React.createElement(SectionHeader, {
+    kicker: "06 / Ads",
+    title: "SHOUTOUTS & SPONSORS",
+    subtitle: "The families and businesses behind the season."
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "ads-grid"
+  }, data.map(function (ad, i) {
+    return /*#__PURE__*/React.createElement("button", {
+      key: i,
+      className: "ad-card",
+      onClick: function onClick() {
+        return setActive(i);
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "ad-corner tl"
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "ad-corner tr"
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "ad-corner bl"
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "ad-corner br"
+    }), /*#__PURE__*/React.createElement("img", {
+      src: ad.src,
+      alt: ad.alt,
+      loading: "lazy"
+    }));
+  })), active !== null && /*#__PURE__*/React.createElement("div", {
+    className: "ad-modal",
+    onClick: function onClick() {
+      return setActive(null);
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "ad-modal-close",
+    onClick: function onClick() {
+      return setActive(null);
+    },
+    "aria-label": "Close"
+  }, /*#__PURE__*/React.createElement(Icon.close, {
+    width: "22",
+    height: "22"
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "ad-modal-nav left",
+    onClick: function onClick(e) {
+      e.stopPropagation();
+      setActive((active - 1 + data.length) % data.length);
+    },
+    "aria-label": "Previous"
+  }, "\u2039"), /*#__PURE__*/React.createElement("img", {
+    src: data[active].src,
+    alt: data[active].alt,
+    onClick: function onClick(e) {
+      return e.stopPropagation();
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "ad-modal-nav right",
+    onClick: function onClick(e) {
+      e.stopPropagation();
+      setActive((active + 1) % data.length);
+    },
+    "aria-label": "Next"
+  }, "\u203A"), /*#__PURE__*/React.createElement("div", {
+    className: "ad-modal-counter"
+  }, active + 1, " / ", data.length)));
 }
 
 // ============ FOOTER ============
 function Footer() {
-  return (
-    <footer className="page-footer">
-      <DDCLogo size={32} color="rgba(255,255,255,0.85)" />
-      <div className="footer-title">VELOCITY · 2026</div>
-      <div className="footer-line">Duggan's Dance Center</div>
-      <div className="footer-line dim">Thank you for moving with us tonight.</div>
-    </footer>
-  );
+  return /*#__PURE__*/React.createElement("footer", {
+    className: "page-footer"
+  }, /*#__PURE__*/React.createElement(DDCLogo, {
+    size: 32,
+    color: "rgba(255,255,255,0.85)"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "footer-title"
+  }, "VELOCITY \xB7 2026"), /*#__PURE__*/React.createElement("div", {
+    className: "footer-line"
+  }, "Duggan's Dance Center"), /*#__PURE__*/React.createElement("div", {
+    className: "footer-line dim"
+  }, "Thank you for moving with us tonight."));
 }
 
 // ============ BOTTOM NAV ============
-const NAV_ITEMS = [
-  { id: "welcome", label: "Welcome", icon: Icon.letter },
-  { id: "staff", label: "Staff", icon: Icon.staff },
-  { id: "seniors", label: "Seniors", icon: Icon.star },
-  { id: "cast", label: "Cast", icon: Icon.users },
-  { id: "program", label: "Program", icon: Icon.list },
-  { id: "ads", label: "Ads", icon: Icon.ad },
-];
-
-function BottomNav({ active, onNav }) {
-  return (
-    <nav className="bottom-nav">
-      <div className="bottom-nav-inner">
-        {NAV_ITEMS.map(item => {
-          const I = item.icon;
-          return (
-            <button
-              key={item.id}
-              className={`nav-btn ${active === item.id ? "active" : ""}`}
-              onClick={() => onNav(item.id)}
-            >
-              <I width="20" height="20" />
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    </nav>
-  );
+var NAV_ITEMS = [{
+  id: "welcome",
+  label: "Welcome",
+  icon: Icon.letter
+}, {
+  id: "staff",
+  label: "Staff",
+  icon: Icon.staff
+}, {
+  id: "seniors",
+  label: "Seniors",
+  icon: Icon.star
+}, {
+  id: "cast",
+  label: "Cast",
+  icon: Icon.users
+}, {
+  id: "program",
+  label: "Program",
+  icon: Icon.list
+}, {
+  id: "ads",
+  label: "Ads",
+  icon: Icon.ad
+}];
+function BottomNav(_ref11) {
+  var active = _ref11.active,
+    onNav = _ref11.onNav;
+  return /*#__PURE__*/React.createElement("nav", {
+    className: "bottom-nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bottom-nav-inner"
+  }, NAV_ITEMS.map(function (item) {
+    var I = item.icon;
+    return /*#__PURE__*/React.createElement("button", {
+      key: item.id,
+      className: "nav-btn ".concat(active === item.id ? "active" : ""),
+      onClick: function onClick() {
+        return onNav(item.id);
+      }
+    }, /*#__PURE__*/React.createElement(I, {
+      width: "20",
+      height: "20"
+    }), /*#__PURE__*/React.createElement("span", null, item.label));
+  })));
 }
 
 // ============ MAIN APP ============
 function App() {
-  const [tweaks, setTweak] = window.useTweaks ? window.useTweaks(TWEAK_DEFAULTS) : [TWEAK_DEFAULTS, () => {}];
-  const [active, setActive] = useState("cover");
-  const [entered, setEntered] = useState(false);
-  const containerRef = useRef(null);
+  var _ref12 = window.useTweaks ? window.useTweaks(TWEAK_DEFAULTS) : [TWEAK_DEFAULTS, function () {}],
+    _ref13 = _slicedToArray(_ref12, 2),
+    tweaks = _ref13[0],
+    setTweak = _ref13[1];
+  var _useState9 = useState("cover"),
+    _useState0 = _slicedToArray(_useState9, 2),
+    active = _useState0[0],
+    setActive = _useState0[1];
+  var _useState1 = useState(false),
+    _useState10 = _slicedToArray(_useState1, 2),
+    entered = _useState10[0],
+    setEntered = _useState10[1];
+  var containerRef = useRef(null);
 
   // Apply tweaks to CSS vars
-  useEffect(() => {
-    const root = document.documentElement;
+  useEffect(function () {
+    var root = document.documentElement;
     root.style.setProperty("--accent-hue", tweaks.accentHue);
     root.style.setProperty("--glow", tweaks.glowIntensity);
     root.classList.toggle("reduce-motion", !!tweaks.reduceMotion);
@@ -2125,103 +2619,157 @@ function App() {
   }, [tweaks]);
 
   // Scroll spy
-  useEffect(() => {
-    const ids = ["welcome", "staff", "seniors", "cast", "program", "ads"];
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
+  useEffect(function () {
+    var ids = ["welcome", "staff", "seniors", "cast", "program", "ads"];
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
         if (e.isIntersecting) setActive(e.target.id);
       });
-    }, { rootMargin: "-40% 0px -50% 0px" });
-    ids.forEach(id => {
-      const el = document.getElementById(id);
+    }, {
+      rootMargin: "-40% 0px -50% 0px"
+    });
+    ids.forEach(function (id) {
+      var el = document.getElementById(id);
       if (el) observer.observe(el);
     });
-    return () => observer.disconnect();
+    return function () {
+      return observer.disconnect();
+    };
   }, [entered]);
-
-  const handleNav = useCallback((id) => {
-    const el = document.getElementById(id);
+  var handleNav = useCallback(function (id) {
+    var el = document.getElementById(id);
     if (el) {
-      const y = el.getBoundingClientRect().top + window.pageYOffset - 12;
-      window.scrollTo({ top: y, behavior: "smooth" });
+      var y = el.getBoundingClientRect().top + window.pageYOffset - 12;
+      window.scrollTo({
+        top: y,
+        behavior: "smooth"
+      });
     }
   }, []);
-
-  const handleEnter = useCallback(() => {
+  var handleEnter = useCallback(function () {
     setEntered(true);
-    requestAnimationFrame(() => {
-      const el = document.getElementById("welcome");
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    requestAnimationFrame(function () {
+      var el = document.getElementById("welcome");
+      if (el) el.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
     });
   }, []);
-
-  const D = window.PLAYBILL;
-
-  return (
-    <div className="app" ref={containerRef}>
-      <div className="bg-stage" aria-hidden="true">
-        <div className="bg-grid" />
-        <div className="bg-glow bg-glow-1" />
-        <div className="bg-glow bg-glow-2" />
-        <div className="bg-glow bg-glow-3" />
-      </div>
-
-      <Cover onEnter={handleEnter} />
-
-      <div className="masthead">
-        <DDCLogo size={20} color="rgba(255,255,255,0.85)" />
-        <div className="masthead-title">VELOCITY <span className="dim">/ 2026</span></div>
-      </div>
-
-      <main className="content">
-        <Welcome data={D.welcome} />
-        <Divider />
-        <Staff data={D.staff} />
-        <Divider />
-        <Seniors data={D.seniors} />
-        <Divider />
-        <Cast data={D.cast} />
-        <Divider />
-        <Program data={D.program} />
-        <Divider />
-        <Ads data={D.ads} />
-        <Footer />
-      </main>
-
-      <BottomNav active={active} onNav={handleNav} />
-
-      {window.TweaksPanel && (
-        <window.TweaksPanel title="Tweaks">
-          <window.TweakSection title="Color">
-            <window.TweakSlider label="Accent hue" value={tweaks.accentHue} min={0} max={360} step={5} onChange={v => setTweak("accentHue", v)} suffix="°" />
-            <window.TweakRadio label="Accent mode" value={tweaks.accentMode} options={[
-              { label: "Neon", value: "neon" },
-              { label: "Mono", value: "mono" },
-            ]} onChange={v => setTweak("accentMode", v)} />
-          </window.TweakSection>
-          <window.TweakSection title="Effects">
-            <window.TweakSlider label="Glow intensity" value={tweaks.glowIntensity} min={0} max={2} step={0.1} onChange={v => setTweak("glowIntensity", v)} />
-            <window.TweakToggle label="Background grid" value={tweaks.showGrid} onChange={v => setTweak("showGrid", v)} />
-            <window.TweakToggle label="Reduce motion" value={tweaks.reduceMotion} onChange={v => setTweak("reduceMotion", v)} />
-          </window.TweakSection>
-        </window.TweaksPanel>
-      )}
-    </div>
-  );
+  var D = window.PLAYBILL;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "app",
+    ref: containerRef
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-stage",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-grid"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "bg-glow bg-glow-1"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "bg-glow bg-glow-2"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "bg-glow bg-glow-3"
+  })), /*#__PURE__*/React.createElement(Cover, {
+    onEnter: handleEnter
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "masthead"
+  }, /*#__PURE__*/React.createElement(DDCLogo, {
+    size: 20,
+    color: "rgba(255,255,255,0.85)"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "masthead-title"
+  }, "VELOCITY ", /*#__PURE__*/React.createElement("span", {
+    className: "dim"
+  }, "/ 2026"))), /*#__PURE__*/React.createElement("main", {
+    className: "content"
+  }, /*#__PURE__*/React.createElement(Welcome, {
+    data: D.welcome
+  }), /*#__PURE__*/React.createElement(Divider, null), /*#__PURE__*/React.createElement(Staff, {
+    data: D.staff
+  }), /*#__PURE__*/React.createElement(Divider, null), /*#__PURE__*/React.createElement(Seniors, {
+    data: D.seniors
+  }), /*#__PURE__*/React.createElement(Divider, null), /*#__PURE__*/React.createElement(Cast, {
+    data: D.cast
+  }), /*#__PURE__*/React.createElement(Divider, null), /*#__PURE__*/React.createElement(Program, {
+    data: D.program
+  }), /*#__PURE__*/React.createElement(Divider, null), /*#__PURE__*/React.createElement(Ads, {
+    data: D.ads
+  }), /*#__PURE__*/React.createElement(Footer, null)), /*#__PURE__*/React.createElement(BottomNav, {
+    active: active,
+    onNav: handleNav
+  }), window.TweaksPanel && /*#__PURE__*/React.createElement(window.TweaksPanel, {
+    title: "Tweaks"
+  }, /*#__PURE__*/React.createElement(window.TweakSection, {
+    title: "Color"
+  }, /*#__PURE__*/React.createElement(window.TweakSlider, {
+    label: "Accent hue",
+    value: tweaks.accentHue,
+    min: 0,
+    max: 360,
+    step: 5,
+    onChange: function onChange(v) {
+      return setTweak("accentHue", v);
+    },
+    suffix: "\xB0"
+  }), /*#__PURE__*/React.createElement(window.TweakRadio, {
+    label: "Accent mode",
+    value: tweaks.accentMode,
+    options: [{
+      label: "Neon",
+      value: "neon"
+    }, {
+      label: "Mono",
+      value: "mono"
+    }],
+    onChange: function onChange(v) {
+      return setTweak("accentMode", v);
+    }
+  })), /*#__PURE__*/React.createElement(window.TweakSection, {
+    title: "Effects"
+  }, /*#__PURE__*/React.createElement(window.TweakSlider, {
+    label: "Glow intensity",
+    value: tweaks.glowIntensity,
+    min: 0,
+    max: 2,
+    step: 0.1,
+    onChange: function onChange(v) {
+      return setTweak("glowIntensity", v);
+    }
+  }), /*#__PURE__*/React.createElement(window.TweakToggle, {
+    label: "Background grid",
+    value: tweaks.showGrid,
+    onChange: function onChange(v) {
+      return setTweak("showGrid", v);
+    }
+  }), /*#__PURE__*/React.createElement(window.TweakToggle, {
+    label: "Reduce motion",
+    value: tweaks.reduceMotion,
+    onChange: function onChange(v) {
+      return setTweak("reduceMotion", v);
+    }
+  }))));
 }
-
 function Divider() {
-  return (
-    <div className="divider" aria-hidden="true">
-      <span className="div-line" />
-      <span className="div-bolt"><Icon.bolt width="14" height="14" /></span>
-      <span className="div-line" />
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "divider",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "div-line"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "div-bolt"
+  }, /*#__PURE__*/React.createElement(Icon.bolt, {
+    width: "14",
+    height: "14"
+  })), /*#__PURE__*/React.createElement("span", {
+    className: "div-line"
+  }));
 }
 
 // Mount
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+ReactDOM.createRoot(document.getElementById("root")).render(/*#__PURE__*/React.createElement(App, null));
+
 </script>
 </body>
 </html>
