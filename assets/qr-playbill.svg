@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 520" width="460" height="520">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#03000a"/>
+      <stop offset="50%" style="stop-color:#07021a"/>
+      <stop offset="100%" style="stop-color:#0d0524"/>
+    </linearGradient>
+    <filter id="cyanGlow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="textGlow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- corner bracket marks -->
+  </defs>
+
+  <!-- Background -->
+  <rect width="460" height="520" fill="url(#bgGrad)" rx="16"/>
+
+  <!-- Grid lines -->
+  <g opacity="0.07" stroke="#b482ff" stroke-width="1">
+    <line x1="0" y1="0" x2="0" y2="520"/><line x1="60" y1="0" x2="60" y2="520"/><line x1="120" y1="0" x2="120" y2="520"/><line x1="180" y1="0" x2="180" y2="520"/><line x1="240" y1="0" x2="240" y2="520"/><line x1="300" y1="0" x2="300" y2="520"/><line x1="360" y1="0" x2="360" y2="520"/><line x1="420" y1="0" x2="420" y2="520"/>
+    <line x1="0" y1="0" x2="460" y2="0"/><line x1="0" y1="60" x2="460" y2="60"/><line x1="0" y1="120" x2="460" y2="120"/><line x1="0" y1="180" x2="460" y2="180"/><line x1="0" y1="240" x2="460" y2="240"/><line x1="0" y1="300" x2="460" y2="300"/><line x1="0" y1="360" x2="460" y2="360"/><line x1="0" y1="420" x2="460" y2="420"/><line x1="0" y1="480" x2="460" y2="480"/>
+  </g>
+
+  <!-- Corner glow blobs -->
+  <circle cx="0" cy="0" r="120" fill="#7820c8" opacity="0.15" filter="url(#cyanGlow)"/>
+  <circle cx="460" cy="520" r="120" fill="#ff2bd6" opacity="0.12" filter="url(#cyanGlow)"/>
+  <circle cx="460" cy="0" r="80" fill="#00f0ff" opacity="0.10" filter="url(#cyanGlow)"/>
+
+  <!-- Border -->
+  <rect x="2" y="2" width="456" height="516" rx="15" fill="none" stroke="#00f0ff" stroke-width="1" opacity="0.4"/>
+  <rect x="6" y="6" width="448" height="508" rx="13" fill="none" stroke="#b624ff" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- Corner accent brackets -->
+  <g stroke="#00f0ff" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.9">
+    <polyline points="22,40 22,22 40,22"/>
+    <polyline points="420,22 438,22 438,40"/>
+    <polyline points="22,480 22,498 40,498"/>
+    <polyline points="420,498 438,498 438,480"/>
+  </g>
+
+  <!-- Studio name top -->
+  <text x="230" y="52" text-anchor="middle" font-family="'Courier New', monospace" font-size="11" letter-spacing="4" fill="#9b96b8" opacity="0.8">DUGGAN'S DANCE CENTER</text>
+
+  <!-- QR code centered -->
+  <g transform="translate(30, 65)">
+    <path stroke="#00f0ff" d="M2 2.5h7m2 0h1m2 0h1m2 0h2m1 0h3m1 0h7M2 3.5h1m5 0h1m4 0h1m10 0h1m5 0h1M2 4.5h1m1 0h3m1 0h1m1 0h4m2 0h1m1 0h1m2 0h2m1 0h1m1 0h3m1 0h1M2 5.5h1m1 0h3m1 0h1m1 0h4m4 0h2m2 0h1m1 0h1m1 0h3m1 0h1M2 6.5h1m1 0h3m1 0h1m1 0h4m1 0h3m3 0h2m1 0h1m1 0h3m1 0h1M2 7.5h1m5 0h1m1 0h3m1 0h7m3 0h1m5 0h1M2 8.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M10 9.5h1m4 0h1m1 0h1m2 0h3M2 10.5h1m1 0h5m2 0h1m1 0h1m2 0h2m1 0h1m1 0h1m2 0h5M2 11.5h2m1 0h1m6 0h1m4 0h2m1 0h2m1 0h4m3 0h1M2 12.5h4m1 0h2m1 0h2m1 0h2m4 0h2m1 0h2m1 0h1M4 13.5h1m4 0h1m1 0h1m2 0h1m1 0h1m1 0h1m3 0h1m2 0h3m1 0h1M2 14.5h1m1 0h1m1 0h5m2 0h2m3 0h2m7 0h2M5 15.5h3m1 0h1m2 0h2m1 0h3m2 0h7m3 0h1M2 16.5h2m3 0h3m2 0h2m1 0h4m3 0h1m1 0h2m1 0h2M5 17.5h2m3 0h2m3 0h1m1 0h1m3 0h1m1 0h4m2 0h1M2 18.5h4m1 0h2m1 0h1m2 0h2m1 0h2m1 0h1m7 0h2M2 19.5h1m2 0h1m1 0h1m4 0h1m1 0h1m2 0h6m1 0h3m1 0h1m1 0h1M2 20.5h1m4 0h2m1 0h4m9 0h1m1 0h2m1 0h1M2 21.5h1m3 0h1m2 0h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h3m1 0h3m2 0h1M2 22.5h1m1 0h1m2 0h2m2 0h1m1 0h1m5 0h8m1 0h3M10 23.5h3m1 0h4m1 0h2m1 0h1m3 0h5M2 24.5h7m3 0h1m2 0h3m1 0h1m1 0h2m1 0h1m1 0h3M2 25.5h1m5 0h1m1 0h6m1 0h1m2 0h3m3 0h1m3 0h1M2 26.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m1 0h4m2 0h5m1 0h1m1 0h1M2 27.5h1m1 0h3m1 0h1m1 0h1m1 0h4m2 0h1m1 0h2m3 0h1m1 0h2M2 28.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1m2 0h1m2 0h7M2 29.5h1m5 0h1m4 0h2m1 0h2m4 0h1m3 0h2m1 0h1M2 30.5h7m1 0h1m5 0h4m1 0h1m1 0h1m1 0h2m1 0h1"/>
+
+  </g>
+
+  <!-- Scan label -->
+  <text x="230" y="432" text-anchor="middle" font-family="'Courier New', monospace" font-size="10" letter-spacing="3" fill="#5b5677">SCAN TO OPEN</text>
+
+  <!-- Velocity title -->
+  <text x="230" y="468" text-anchor="middle" font-family="'Courier New', monospace" font-size="28" font-weight="bold" letter-spacing="8" fill="#00f0ff" filter="url(#textGlow)">VELOCITY</text>
+
+  <!-- Year -->
+  <text x="230" y="494" text-anchor="middle" font-family="'Courier New', monospace" font-size="12" letter-spacing="5" fill="#b624ff" opacity="0.9">2026</text>
+</svg>
