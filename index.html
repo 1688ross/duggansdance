@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Velocity · DDC 2026 Playbill</title>
+<meta name="theme-color" content="#03000a" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles/base.css" />
+<link rel="stylesheet" href="styles/sections.css" />
+<link rel="stylesheet" href="styles/components.css" />
+
+<meta name="ext-resource-dependency" content="assets/cover-glow.png" data-resource-id="cover">
+<meta name="ext-resource-dependency" content="assets/senior-emma-1.png" data-resource-id="seniorEmma1">
+<meta name="ext-resource-dependency" content="assets/senior-emma-2.png" data-resource-id="seniorEmma2">
+<meta name="ext-resource-dependency" content="assets/senior-mikah-1.png" data-resource-id="seniorMikah1">
+<meta name="ext-resource-dependency" content="assets/senior-mikah-2.png" data-resource-id="seniorMikah2">
+<meta name="ext-resource-dependency" content="assets/ad-1.png" data-resource-id="ad1">
+<meta name="ext-resource-dependency" content="assets/ad-2.png" data-resource-id="ad2">
+<meta name="ext-resource-dependency" content="assets/ad-3.png" data-resource-id="ad3">
+<meta name="ext-resource-dependency" content="assets/ad-4.png" data-resource-id="ad4">
+<meta name="ext-resource-dependency" content="assets/ad-5.png" data-resource-id="ad5">
+<meta name="ext-resource-dependency" content="assets/ad-6.png" data-resource-id="ad6">
+<meta name="ext-resource-dependency" content="assets/ad-7.png" data-resource-id="ad7">
+<meta name="ext-resource-dependency" content="assets/ad-8.png" data-resource-id="ad8">
+<meta name="ext-resource-dependency" content="assets/ad-9.png" data-resource-id="ad9">
+
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="#03000a"/>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="50%" stop-color="#b624ff"/>
+      <stop offset="100%" stop-color="#ff2bd6"/>
+    </linearGradient>
+  </defs>
+  <path d="M30 25 L50 75 L70 25" fill="none" stroke="url(#g)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="50" y="92" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="700" fill="#00f0ff" letter-spacing="2">VELOCITY</text>
+</svg>
+</template>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="data.js"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="app.jsx"></script>
+</body>
+</html>
