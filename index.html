@@ -2040,41 +2040,17 @@ var Icon = {
 // ============ DDC LOGO (recreated) ============
 function DDCLogo(_ref) {
   var _ref$size = _ref.size,
-    size = _ref$size === void 0 ? 28 : _ref$size,
-    _ref$color = _ref.color,
-    color = _ref$color === void 0 ? "currentColor" : _ref$color;
-  return /*#__PURE__*/React.createElement("svg", {
-    viewBox: "0 0 120 40",
-    width: size * 3,
-    height: size,
+    size = _ref$size === void 0 ? 28 : _ref$size;
+  return /*#__PURE__*/React.createElement("img", {
+    src: "assets/ddc-logo.png",
+    alt: "Duggan's Dance Center",
     style: {
-      display: "block"
+      height: size * 2 + "px",
+      width: "auto",
+      display: "block",
+      objectFit: "contain"
     }
-  }, /*#__PURE__*/React.createElement("text", {
-    x: "36",
-    y: "28",
-    fontFamily: "'Orbitron', sans-serif",
-    fontWeight: "800",
-    fontSize: "22",
-    fill: color,
-    letterSpacing: "2"
-  }, "DDC"), /*#__PURE__*/React.createElement("g", {
-    stroke: color,
-    strokeWidth: "1.5",
-    strokeLinecap: "round",
-    fill: "none",
-    opacity: "0.9"
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M4 34 L 28 34"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M22 30 L 28 34 L 22 38"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M8 36 L 12 36",
-    opacity: "0.7"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M4 32 L 8 32",
-    opacity: "0.5"
-  })));
+  });
 }
 
 // ============ COVER ============
