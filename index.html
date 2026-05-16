@@ -1056,6 +1056,71 @@ img { max-width: 100%; display: block; }
 [id^="tweaks-panel"], .tweaks-panel {
   font-family: var(--font-body) !important;
 }
+
+/* ============ PDF SAVE BUTTON ============ */
+.pdf-btn {
+  position: fixed;
+  bottom: 88px;
+  right: 16px;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, rgba(0,240,255,0.12), rgba(182,36,255,0.12));
+  border: 1px solid rgba(0,240,255,0.4);
+  border-radius: 40px;
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 0 16px rgba(0,240,255,0.2), 0 4px 16px rgba(0,0,0,0.4);
+  transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s;
+  text-transform: uppercase;
+  -webkit-tap-highlight-color: transparent;
+}
+.pdf-btn:hover {
+  border-color: rgba(0,240,255,0.7);
+  box-shadow: 0 0 28px rgba(0,240,255,0.35), 0 6px 20px rgba(0,0,0,0.5);
+  transform: translateY(-1px);
+}
+.pdf-btn svg { flex-shrink: 0; }
+
+/* ============ PRINT / PDF ============ */
+@media print {
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  .bottom-nav, .twk-panel, .pdf-btn, .cover-cta, .bg-stage, .masthead { display: none !important; }
+  html, body { overflow: visible !important; }
+  .app { position: static !important; }
+  #welcome  { page-break-before: always; }
+  #staff    { page-break-before: always; }
+  #seniors  { page-break-before: always; }
+  #cast     { page-break-before: always; }
+  #program  { page-break-before: always; }
+  #ads      { page-break-before: always; }
+  .page-footer { page-break-before: always; }
+  .prog-body { max-height: none !important; overflow: visible !important; }
+  .prog-body-inner { display: block !important; }
+  .prog-row { break-inside: avoid; margin-bottom: 4px; }
+  .prog-intermission { break-inside: avoid; }
+  section { display: block !important; opacity: 1 !important; }
+  .cover { min-height: auto; page-break-after: always; }
+  .cover-image-wrap { height: 50vw; max-height: 400px; }
+  .seniors-grid { display: grid !important; grid-template-columns: 1fr 1fr; }
+  .senior-card { break-inside: avoid; }
+  .cast-grid { columns: 3; }
+  .cast-name { break-inside: avoid; }
+  .ads-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  .cast-search-wrap { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -2672,7 +2737,17 @@ function App() {
     data: D.program
   }), /*#__PURE__*/React.createElement(Divider, null), /*#__PURE__*/React.createElement(Ads, {
     data: D.ads
-  }), /*#__PURE__*/React.createElement(Footer, null)), /*#__PURE__*/React.createElement(BottomNav, {
+  }), /*#__PURE__*/React.createElement(Footer, null)), /*#__PURE__*/React.createElement("button", {
+    className: "pdf-btn",
+    onClick: function() { window.print(); },
+    title: "Save as PDF"
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "15", height: "15", viewBox: "0 0 24 24", fill: "none",
+    stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" }),
+    /*#__PURE__*/React.createElement("polyline", { points: "7 10 12 15 17 10" }),
+    /*#__PURE__*/React.createElement("line", { x1: "12", y1: "15", x2: "12", y2: "3" })),
+  "Save PDF"), /*#__PURE__*/React.createElement(BottomNav, {
     active: active,
     onNav: handleNav
   }), window.TweaksPanel && /*#__PURE__*/React.createElement(window.TweaksPanel, {
